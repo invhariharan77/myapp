@@ -6,7 +6,7 @@ pipeline {
     ORG = 'invhariharan77'
     APP_NAME = 'myapp'
     CHARTMUSEUM_CREDS = credentials('jenkins-x-chartmuseum')
-    VERSION = '0.0.15'
+    VERSION = '0.0.16'
   }
   stages {
     stage ("Sleep") {
@@ -71,7 +71,7 @@ pipeline {
                   logLevel: 'true', policy: 'warn', requirePackageUpdate: false, timeout: 10
             }
             echo "done"
-            sleep 3
+            sleep 300
         }
     }
   
