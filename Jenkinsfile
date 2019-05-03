@@ -6,6 +6,7 @@ pipeline {
     ORG = 'invhariharan77'
     APP_NAME = 'myapp'
     CHARTMUSEUM_CREDS = credentials('jenkins-x-chartmuseum')
+    VERSION = '0.0.8'
   }
   stages {
     stage ("Sleep") {
@@ -64,7 +65,7 @@ pipeline {
                     dockerAddress: 'unix:///var/run/docker.sock', \
                     ignoreImageBuildTime: true, key: '', logLevel: 'true', \
                     policy: 'warn', repository: $DOCKER_REGISTRY/$ORG/$APP_NAME, \
-                    requirePackageUpdate: false, tag: \$(cat VERSION), \
+                    requirePackageUpdate: false, tag: VERSION, \
                     timeout: 10
             }
         }
@@ -75,7 +76,7 @@ pipeline {
             script {
                 twistlockPublish ca: '', cert: '', \
                     dockerAddress: 'unix:///var/run/docker.sock', key: '', \
-                    logLevel: 'true', repository: $DOCKER_REGISTRY/$ORG/$APP_NAME, tag: \$(cat VERSION), \
+                    logLevel: 'true', repository: $DOCKER_REGISTRY/$ORG/$APP_NAME, tag: VERSION, \
                     timeout: 10
             }
         }
