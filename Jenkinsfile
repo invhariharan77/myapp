@@ -60,14 +60,17 @@ pipeline {
  
     stage('Scan with Twistlock') {
         steps {
+            echo "About to invoke twistlock scan"
+            sleep 3
             script {
                 twistlockScan ca: '', cert: '', compliancePolicy: 'warn', \
-                    dockerAddress: 'unix:///var/run/docker.sock', \
-                    ignoreImageBuildTime: true, key: '', logLevel: 'true', \
-                    policy: 'warn', repository: $DOCKER_REGISTRY/$ORG/$APP_NAME, \
-                    requirePackageUpdate: false, tag: VERSION, \
-                    timeout: 10
+                  containerized: false, dockerAddress: 'unix:///var/run/docker.sock', \
+                  gracePeriodDays: 0, ignoreImageBuildTime: false, \
+                  image: '$DOCKER_REGISTRY/$ORG/$APP_NAME:VERSION', key: '', \
+                  logLevel: 'true', policy: 'warn', requirePackageUpdate: false, timeout: 10
             }
+            echo "done"
+            sleep 3
         }
     }
   
