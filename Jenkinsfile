@@ -57,18 +57,31 @@ pipeline {
       }
     }
  
-    stage ('scan') {
-      steps {
-        twistlockScan ca: '', cert: '', compliancePolicy: 'critical', dockerAddress: 'unix:///var/run/docker.sock', gracePeriodDays: 0, ignoreImageBuildTime: false, image: '$DOCKER_REGISTRY/$ORG/$APP_NAME:\$(cat VERSION)', key: '', logLevel: 'true', policy: 'critical', requirePackageUpdate: false, timeout: 10
-      }
+    stage('Scan with Twistlock') {
+        steps {
+            script {
+                twistlockScan ca: '', cert: '', compliancePolicy: 'warn', \
+                    dockerAddress: 'unix:///var/run/docker.sock', \
+                    ignoreImageBuildTime: true, key: '', logLevel: 'true', \
+                    policy: 'warn', repository: $DOCKER_REGISTRY/$ORG/$APP_NAME, \
+                    requirePackageUpdate: false, tag: \$(cat VERSION), \
+                    timeout: 10
+            }
+        }
     }
-
-    stage ('publish') {
-       steps {
-        twistlockPublish ca: '', cert: '', dockerAddress: 'unix:///var/run/docker.sock', image: '$DOCKER_REGISTRY/$ORG/$APP_NAME:\$(cat VERSION)', key: '', logLevel: 'true', timeout: 10
-       }
-    }
+  
+    stage('Publish to Twistlock') {
+        steps {
+            script {
+                twistlockPublish ca: '', cert: '', \
+                    dockerAddress: 'unix:///var/run/docker.sock', key: '', \
+                    logLevel: 'true', repository: $DOCKER_REGISTRY/$ORG/$APP_NAME, tag: \$(cat VERSION), \
+                    timeout: 10
+            }
+        }
+    }  
   }
+  
   post {
         always {
           cleanWs()
