@@ -9,7 +9,10 @@ pipeline {
   }
   stages {
     stage ("Sleep") {
-      sleep(time:300,unit:"SECONDS")
+      steps {
+        echo 'First of the parallel stages without further nesting'
+        sleep 300 
+      }
     }
     stage('CI Build and push snapshot') {
       when {
