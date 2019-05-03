@@ -56,24 +56,15 @@ pipeline {
         }
       }
     }
-    stage('Promote to Environments') {
-      when {
-        branch 'master'
-      }
-      steps {
-        container('python') {
-          dir('./charts/myapp') {
-            sh "jx step changelog --version v\$(cat ../../VERSION)"
-
-            // release the helm chart
-            sh "jx step helm release"
-
-            // promote through all 'Auto' promotion Environments
-            sh "jx promote -b --all-auto --timeout 1h --version \$(cat ../../VERSION)"
-          }
-        }
-      }
+ 
+    stage ('scan') {
+        twistlockScan ca: '', cert: '', compliancePolicy: 'critical', dockerAddress: 'unix:///var/run/docker.sock', gracePeriodDays: 0, ignoreImageBuildTime: false, image: '$DOCKER_REGISTRY/$ORG/$APP_NAME:\$(cat VERSION)', key: '', logLevel: 'true', policy: 'critical', requirePackageUpdate: false, timeout: 10
     }
+
+     stage ('publish') {
+        twistlockPublish ca: '', cert: '', dockerAddress: 'unix:///var/run/docker.sock', image: '$DOCKER_REGISTRY/$ORG/$APP_NAME:\$(cat VERSION)', key: '', logLevel: 'true', timeout: 10
+    }
+    
   }
   post {
         always {
