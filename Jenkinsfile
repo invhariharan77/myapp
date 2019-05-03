@@ -8,10 +8,8 @@ pipeline {
     CHARTMUSEUM_CREDS = credentials('jenkins-x-chartmuseum')
   }
   stages {
-    stage ("Sleeping...") {
-      def time = 300
-      echo "Waiting 300 seconds for deployment to complete prior starting smoke testing"
-      sleep time.toInteger() // seconds
+    stage ("Sleep") {
+      sleep(time:300,unit:"SECONDS")
     }
     stage('CI Build and push snapshot') {
       when {
