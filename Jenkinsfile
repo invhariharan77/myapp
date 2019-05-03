@@ -6,7 +6,7 @@ pipeline {
     ORG = 'invhariharan77'
     APP_NAME = 'myapp'
     CHARTMUSEUM_CREDS = credentials('jenkins-x-chartmuseum')
-    VERSION = '0.0.14'
+    VERSION = '0.0.15'
   }
   stages {
     stage ("Sleep") {
