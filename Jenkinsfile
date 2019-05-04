@@ -10,7 +10,7 @@
     }
   
     stages {
-      stage ("Sleep") {
+      stage ("Prepare") {
         steps {
           echo 'First of the parallel stages without further nesting'
           sleep 3 
@@ -18,18 +18,25 @@
       }
 
       stage('Build') {
+        when {
+          branch 'master'
+        }
         steps {
           container('python') {
+            // ensure we're not on a detached head
             sh "git checkout master"
-            // sh "git clone https://github.com/invhariharan77/hellonode.git"
-            sh "echo 0.0.1 > VERSION"
+            sh "git config --global credential.helper store"
+            sh "jx step git credentials"
+
+            // so we can retrieve the version in later steps
+            sh "echo \$(jx-release-version) > VERSION"
+            sh "jx step tag --version \$(cat VERSION)"
             sh "python -m unittest"
             sh "export VERSION=`cat VERSION` && skaffold build -f skaffold.yaml"
-            sh "jx step post build --image invhariharan/hellonode:latest"
           }
-        }     
+        }
       }
-
+      
       stage('Scan') {
         steps {
           sleep 5
@@ -69,7 +76,18 @@
         }
       }
     }
-  
+    
+    stage('Publish') {
+      when {
+        branch 'master'
+      }
+      steps {
+        container('python') {
+          sh "jx step post build --image $DOCKER_REGISTRY/$ORG/$APP_NAME:\$(cat VERSION)"
+        }
+      }
+    }
+
     post {
       always {
         cleanWs()
