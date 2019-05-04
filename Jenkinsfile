@@ -59,7 +59,7 @@
         }
       }
 
-      stage('Publish') {
+      stage('Report') {
         steps {
           script {
            twistlockPublish ca: '',
@@ -78,9 +78,6 @@
     }
     
     stage('Publish') {
-      when {
-        branch 'master'
-      }
       steps {
         container('python') {
           sh "jx step post build --image $DOCKER_REGISTRY/$ORG/$APP_NAME:\$(cat VERSION)"
