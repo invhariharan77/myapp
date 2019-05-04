@@ -32,7 +32,7 @@
         twistlockScan ca: '',
           cert: '',
           compliancePolicy: 'critical',
-          dockerAddress: 'unix:///var/run/docker.sock',
+          dockerAddress: 'tcp://localhost:2375',
           gracePeriodDays: 0,
           ignoreImageBuildTime: true,
           image: 'registry.eu-de.bluemix.net/invhariharan77/myapp:0.0.1',
@@ -50,7 +50,7 @@
       script {
        twistlockPublish ca: '',
           cert: '',
-          dockerAddress: 'unix:///var/run/docker.sock',
+          dockerAddress: 'tcp://localhost:2375',
           ignoreImageBuildTime: true,
           image: 'registry.eu-de.bluemix.net/invhariharan77/myapp:0.0.1',
           key: '',
