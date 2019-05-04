@@ -3,6 +3,7 @@
       label "jenkins-python"
     }
     environment {
+      DOCKER_REGISTRY = 'registry.eu-de.bluemix.net'
       ORG = 'invhariharan77'
       APP_NAME = 'myapp'
       CHARTMUSEUM_CREDS = credentials('jenkins-x-chartmuseum')
