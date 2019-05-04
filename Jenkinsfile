@@ -6,7 +6,7 @@ pipeline {
     ORG = 'invhariharan77'
     APP_NAME = 'myapp'
     CHARTMUSEUM_CREDS = credentials('jenkins-x-chartmuseum')
-    VERSION = '0.0.16'
+    VERSION = '0.0.1'
   }
   stages {
     stage ("Sleep") {
@@ -49,7 +49,8 @@ pipeline {
           sh "jx step git credentials"
 
           // so we can retrieve the version in later steps
-          sh "echo \$(jx-release-version) > VERSION"
+          // sh "echo \$(jx-release-version) > VERSION"
+          sh "echo 0.0.1 > VERSION"
           sh "jx step tag --version \$(cat VERSION)"
           sh "python -m unittest"
           sh "export VERSION=`cat VERSION` && skaffold build -f skaffold.yaml"
