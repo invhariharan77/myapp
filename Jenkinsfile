@@ -38,7 +38,7 @@
       script {
         twistlockScan ca: '',
           cert: '',
-          compliancePolicy: 'critical',
+          compliancePolicy: 'warn',
           dockerAddress: 'tcp://localhost:2375',
           gracePeriodDays: 0,
           ignoreImageBuildTime: true,
