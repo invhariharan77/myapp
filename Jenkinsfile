@@ -50,7 +50,8 @@
           logLevel: 'true',
           policy: 'warn',
           requirePackageUpdate: false,
-          timeout: 10
+          timeout: 10,
+          containerized: 'true'
         }
        sleep 5
       }
@@ -66,7 +67,8 @@
           image: 'registry.eu-de.bluemix.net/invhariharan77/myapp:0.0.1',
           key: '',
           logLevel: 'true',
-          timeout: 10
+          timeout: 10,
+          containerized: 'true'
       }
     }
   }
