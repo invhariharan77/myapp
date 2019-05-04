@@ -6,7 +6,7 @@
       ORG = 'invhariharan77'
       APP_NAME = 'myapp'
       CHARTMUSEUM_CREDS = credentials('jenkins-x-chartmuseum')
-      // VERSION = '0.0.1'
+      VERSION = '0.0.25'
     }
   
     stages {
@@ -47,7 +47,7 @@
               dockerAddress: 'tcp://localhost:2375',
               gracePeriodDays: 0,
               ignoreImageBuildTime: true,
-              image: '$DOCKER_REGISTRY/$ORG/$APP_NAME:\$(cat VERSION)',
+              image: '$DOCKER_REGISTRY/$ORG/$APP_NAME:$VERSION',
               key: '',
               logLevel: 'true',
               policy: 'warn',
@@ -66,7 +66,7 @@
               cert: '',
               dockerAddress: 'tcp://localhost:2375',
               ignoreImageBuildTime: true,
-              image: '$DOCKER_REGISTRY/$ORG/$APP_NAME:\$(cat VERSION)',
+              image: '$DOCKER_REGISTRY/$ORG/$APP_NAME:$VERSION',
               key: '',
               logLevel: 'true',
               timeout: 10,
