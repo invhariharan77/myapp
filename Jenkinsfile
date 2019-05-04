@@ -72,7 +72,7 @@
               timeout: 10,
               containerized: 'true'
           }
-          sleep 50000
+          sleep 5
         }
       }
          
