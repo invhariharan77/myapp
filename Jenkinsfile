@@ -7,7 +7,7 @@
       ORG = 'invhariharan77'
       APP_NAME = 'myapp'
       CHARTMUSEUM_CREDS = credentials('jenkins-x-chartmuseum')
-      VERSION = '0.0.28'
+      VERSION = '0.0.29'
     }
   
     stages {
@@ -48,7 +48,7 @@
               dockerAddress: 'tcp://localhost:2375',
               gracePeriodDays: 0,
               ignoreImageBuildTime: true,
-              image: 'registry.eu-de.bluemix.net/invhariharan77/myapp:0.0.28',
+              image: 'registry.eu-de.bluemix.net/invhariharan77/myapp:0.0.29',
               key: '',
               logLevel: 'true',
               policy: 'warn',
@@ -66,12 +66,12 @@
               cert: '',
               dockerAddress: 'tcp://localhost:2375',
               ignoreImageBuildTime: true,
-              image: 'registry.eu-de.bluemix.net/invhariharan77/myapp:0.0.28',
+              image: 'registry.eu-de.bluemix.net/invhariharan77/myapp:0.0.29',
               key: '',
               logLevel: 'true',
               timeout: 10
           }
-          sleep 5
+          sleep 50000
         }
       }
          
