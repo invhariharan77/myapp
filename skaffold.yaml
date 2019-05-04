@@ -7,7 +7,7 @@ build:
     docker: {}
   tagPolicy:
     envTemplate:
-      template: 'invhariharan/hellonode:latest'
+      template: '{{.DOCKER_REGISTRY}}/invhariharan77/myapp:{{.VERSION}}'
   local: {}
 deploy:
   kubectl: {}
@@ -18,7 +18,7 @@ profiles:
     - docker: {}
     tagPolicy:
       envTemplate:
-        template: 'invhariharan/hellonode:latest'
+        template: '{{.DOCKER_REGISTRY}}/invhariharan77/myapp:{{.VERSION}}'
     local: {}
   deploy:
     helm:
