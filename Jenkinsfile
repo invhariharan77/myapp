@@ -66,10 +66,10 @@ pipeline {
             sleep 3
             script {
                 twistlockScan ca: '', cert: '', compliancePolicy: 'warn', \
-                  containerized: true, dockerAddress: 'tcp://localhost:2375', \
+                  containerized: true, dockerAddress: 'unix:///var/run/docker.sock', \
                   gracePeriodDays: 0, ignoreImageBuildTime: false, \
                   image: '$DOCKER_REGISTRY/$ORG/$APP_NAME:$VERSION', key: '', \
-                  logLevel: 'true', policy: 'warn', requirePackageUpdate: false, timeout: 10
+                  logLevel: 'true', policy: 'warn', requirePackageUpdate: false, timeout: 60
             }
             echo "done"
             sleep 300
@@ -83,11 +83,11 @@ pipeline {
             sleep 3
             script {
                 twistlockPublish ca: '', cert: '',  containerized: true, \
-                    dockerAddress: 'tcp://localhost:2375', key: '', \
+                    dockerAddress: 'unix:///var/run/docker.sock', key: '', \
                     image: '$DOCKER_REGISTRY/$ORG/$APP_NAME:$VERSION', \
-                    logLevel: 'true', timeout: 10
+                    logLevel: 'true', timeout: 60
             }
-            sleep 300
+            sleep 3000
             echo "done"
         }
     }  
