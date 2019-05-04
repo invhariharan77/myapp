@@ -23,8 +23,7 @@
         sh 'echo "MAINTAINER Aqsa Fatima <aqsa@twistlock.com>" >> Dockerfile'
         sh 'echo "RUN mkdir -p /tmp/test/dir" >> Dockerfile'
         sh 'docker build --no-cache -t registry.eu-de.bluemix.net/invhariharan77/myapp:0.0.1 .'
-      }
-      sleep 60
+      }     
    }
 
   stage('Scan') {
