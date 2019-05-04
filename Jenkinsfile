@@ -35,6 +35,7 @@
 
   stage('Scan') {
     steps {
+      sleep 5
       script {
         twistlockScan ca: '',
           cert: '',
@@ -49,23 +50,24 @@
           requirePackageUpdate: false,
           timeout: 10
         }
+       sleep 60000
       }
     }
 
-  stage('Publish') {
-    steps {
-      script {
-       twistlockPublish ca: '',
-          cert: '',
-          dockerAddress: 'tcp://localhost:2375',
-          ignoreImageBuildTime: true,
-          image: 'registry.eu-de.bluemix.net/invhariharan77/myapp:0.0.1',
-          key: '',
-          logLevel: 'true',
-          timeout: 10
-      }
-    }
-  }
+  // stage('Publish') {
+    // steps {
+      // script {
+       // twistlockPublish ca: '',
+          // cert: '',
+          // dockerAddress: 'tcp://localhost:2375',
+          // ignoreImageBuildTime: true,
+          // image: 'registry.eu-de.bluemix.net/invhariharan77/myapp:0.0.1',
+          // key: '',
+          // logLevel: 'true',
+          // timeout: 10
+      // }
+    // }
+  // }
 
   }
   
