@@ -87,7 +87,7 @@ pipeline {
                     image: '$DOCKER_REGISTRY/$ORG/$APP_NAME:$VERSION', \
                     logLevel: 'true', timeout: 60
             }
-            sleep 3000
+            sleep 3001
             echo "done"
         }
     }  
