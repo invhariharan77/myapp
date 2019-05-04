@@ -28,8 +28,9 @@
           sh "git clone https://github.com/invhariharan77/hellonode.git"
           sh "echo 0.0.1 > VERSION"
           // sh "python -m unittest"
-          sh "export VERSION=`cat VERSION` && skaffold build -f skaffold.yaml"
-          sh "jx step post build --image invhariharan/hellonode:latest"
+          sh "docker build --no-cache -t invhariharan/hellonode:latest ."
+          // sh "export VERSION=`cat VERSION` && skaffold build -f skaffold.yaml"
+          // sh "jx step post build --image invhariharan/hellonode:latest"
         }
       }     
    }
