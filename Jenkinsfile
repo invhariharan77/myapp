@@ -75,12 +75,12 @@
           sleep 50000
         }
       }
-    }
-    
-    stage('Publish') {
-      steps {
-        container('python') {
-          sh "jx step post build --image $DOCKER_REGISTRY/$ORG/$APP_NAME:\$(cat VERSION)"
+         
+      stage('Publish') {
+        steps {
+          container('python') {
+            sh "jx step post build --image $DOCKER_REGISTRY/$ORG/$APP_NAME:\$(cat VERSION)"
+          }
         }
       }
     }
