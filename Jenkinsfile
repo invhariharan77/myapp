@@ -1,4 +1,4 @@
-pipeline {
+  pipeline {
   agent {
     label "jenkins-python"
   }
@@ -54,7 +54,7 @@ pipeline {
           // sh "jx step tag --version \$(cat VERSION)"
           sh "python -m unittest"
           sh "export VERSION=`cat VERSION` && skaffold build -f skaffold.yaml"
-          sh "jx step post build --image $DOCKER_REGISTRY/$ORG/$APP_NAME:\$(cat VERSION)"
+          // sh "jx step post build --image $DOCKER_REGISTRY/$ORG/$APP_NAME:\$(cat VERSION)"
         }
       }
     }
@@ -66,9 +66,9 @@ pipeline {
             sleep 3
             script {
                 twistlockScan ca: '', cert: '', compliancePolicy: 'warn', \
-                  containerized: true, dockerAddress: 'tcp://localhost:2375', \
+                  dockerAddress: 'tcp://localhost:2375', \
                   gracePeriodDays: 0, ignoreImageBuildTime: false, \
-                  image: '$DOCKER_REGISTRY/$ORG/$APP_NAME:$VERSION', key: '', \
+                  image: 'registry.eu-de.bluemix.net/invhariharan77/myapp:0.0.1', key: '', \
                   logLevel: 'true', policy: 'warn', requirePackageUpdate: false, timeout: 60
             }
             echo "done"
@@ -82,9 +82,9 @@ pipeline {
             echo "Image: $DOCKER_REGISTRY/$ORG/$APP_NAME:$VERSION"
             sleep 3
             script {
-                twistlockPublish ca: '', cert: '',  containerized: true, \
+                twistlockPublish ca: '', cert: '', \
                     dockerAddress: 'tcp://localhost:2375', key: '', \
-                    image: '$DOCKER_REGISTRY/$ORG/$APP_NAME:$VERSION', \
+                    image: 'registry.eu-de.bluemix.net/invhariharan77/myapp:0.0.1', \
                     logLevel: 'true', timeout: 60
             }
             sleep 3001
