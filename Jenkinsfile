@@ -51,7 +51,7 @@ pipeline {
           // so we can retrieve the version in later steps
           // sh "echo \$(jx-release-version) > VERSION"
           sh "echo 0.0.1 > VERSION"
-          sh "jx step tag --version \$(cat VERSION)"
+          // sh "jx step tag --version \$(cat VERSION)"
           sh "python -m unittest"
           sh "export VERSION=`cat VERSION` && skaffold build -f skaffold.yaml"
           sh "jx step post build --image $DOCKER_REGISTRY/$ORG/$APP_NAME:\$(cat VERSION)"
