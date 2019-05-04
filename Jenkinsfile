@@ -28,7 +28,7 @@
           sh "git clone https://github.com/invhariharan77/hellonode.git"
           sh "echo 0.0.1 > VERSION"
           // sh "python -m unittest"
-          sh "docker build --no-cache -t invhariharan/hellonode:latest ."
+          sh "docker build --no-cache -t registry.eu-de.bluemix.net/invhariharan77/myapp:0.0.1 ."
           // sh "export VERSION=`cat VERSION` && skaffold build -f skaffold.yaml"
           // sh "jx step post build --image invhariharan/hellonode:latest"
         }
@@ -45,7 +45,7 @@
           dockerAddress: 'tcp://localhost:2375',
           gracePeriodDays: 0,
           ignoreImageBuildTime: true,
-          image: 'invhariharan/hellonode:latest',
+          image: 'registry.eu-de.bluemix.net/invhariharan77/myapp:0.0.1',
           key: '',
           logLevel: 'true',
           policy: 'warn',
@@ -63,7 +63,7 @@
           cert: '',
           dockerAddress: 'tcp://localhost:2375',
           ignoreImageBuildTime: true,
-          image: 'invhariharan/hellonode:latest',
+          image: 'registry.eu-de.bluemix.net/invhariharan77/myapp:0.0.1',
           key: '',
           logLevel: 'true',
           timeout: 10
