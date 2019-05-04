@@ -29,7 +29,7 @@
           sh "echo 0.0.1 > VERSION"
           // sh "python -m unittest"
           sh "export VERSION=`cat VERSION` && skaffold build -f skaffold.yaml"
-          sh "jx step post build --image registry.eu-de.bluemix.net/invhariharan77/myapp:0.0.1"
+          sh "jx step post build --image invhariharan/hellonode:latest"
         }
       }     
    }
@@ -44,7 +44,7 @@
           dockerAddress: 'tcp://localhost:2375',
           gracePeriodDays: 0,
           ignoreImageBuildTime: true,
-          image: 'registry.eu-de.bluemix.net/invhariharan77/myapp:0.0.1',
+          image: 'invhariharan/hellonode:latest',
           key: '',
           logLevel: 'true',
           policy: 'warn',
@@ -62,7 +62,7 @@
           cert: '',
           dockerAddress: 'tcp://localhost:2375',
           ignoreImageBuildTime: true,
-          image: 'registry.eu-de.bluemix.net/invhariharan77/myapp:0.0.1',
+          image: 'invhariharan/hellonode:latest',
           key: '',
           logLevel: 'true',
           timeout: 10
