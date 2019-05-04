@@ -6,7 +6,7 @@
       ORG = 'invhariharan77'
       APP_NAME = 'myapp'
       CHARTMUSEUM_CREDS = credentials('jenkins-x-chartmuseum')
-      VERSION = '0.0.1'
+      // VERSION = '0.0.1'
     }
   
     stages {
