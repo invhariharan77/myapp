@@ -15,82 +15,52 @@
         sleep 3 
       }
     }
-    stage('CI Build and push snapshot') {
-      when {
-        branch 'PR-*'
-      }
-      environment {
-        PREVIEW_VERSION = "0.0.0-SNAPSHOT-$BRANCH_NAME-$BUILD_NUMBER"
-        PREVIEW_NAMESPACE = "$APP_NAME-$BRANCH_NAME".toLowerCase()
-        HELM_RELEASE = "$PREVIEW_NAMESPACE".toLowerCase()
-      }
-      steps {
-        container('python') {
-          sh "python -m unittest"
-          sh "export VERSION=$PREVIEW_VERSION && skaffold build -f skaffold.yaml"
-          sh "jx step post build --image $DOCKER_REGISTRY/$ORG/$APP_NAME:$PREVIEW_VERSION"
-          dir('./charts/preview') {
-            sh "make preview"
-            sh "jx preview --app $APP_NAME --dir ../.."
-          }
-        }
-      }
-    }
-    stage('Build Release') {
-      when {
-        branch 'master'
-      }
-      steps {
-        container('python') {
 
-          // ensure we're not on a detached head
-          sh "git checkout master"
-          // sh "git config --global credential.helper store"
-          // sh "jx step git credentials"
+    stage('Build') {
+      steps {
+        // Build an image for scanning
+        sh 'echo "FROM ubuntu:14.04" > Dockerfile'
+        sh 'echo "MAINTAINER Aqsa Fatima <aqsa@twistlock.com>" >> Dockerfile'
+        sh 'echo "RUN mkdir -p /tmp/test/dir" >> Dockerfile'
+        sh 'docker build --no-cache -t registry.eu-de.bluemix.net/invhariharan77/myapp:0.0.1 .'
+      }
+      sleep 60
+   }
 
-          // so we can retrieve the version in later steps
-          // sh "echo \$(jx-release-version) > VERSION"
-          sh "echo 0.0.1 > VERSION"
-          // sh "jx step tag --version \$(cat VERSION)"
-          sh "python -m unittest"
-          sh "export VERSION=`cat VERSION` && skaffold build -f skaffold.yaml"
-          // sh "jx step post build --image $DOCKER_REGISTRY/$ORG/$APP_NAME:\$(cat VERSION)"
+  stage('Scan') {
+    steps {
+      script {
+        twistlockScan ca: '',
+          cert: '',
+          compliancePolicy: 'critical',
+          dockerAddress: 'unix:///var/run/docker.sock',
+          gracePeriodDays: 0,
+          ignoreImageBuildTime: true,
+          image: 'registry.eu-de.bluemix.net/invhariharan77/myapp:0.0.1',
+          key: '',
+          logLevel: 'true',
+          policy: 'warn',
+          requirePackageUpdate: false,
+          timeout: 10
         }
       }
     }
- 
-    stage('Scan with Twistlock') {
-        steps {
-            echo "About to invoke twistlock scan"
-            echo "Image: $DOCKER_REGISTRY/$ORG/$APP_NAME:$VERSION"
-            sleep 3
-            script {
-                twistlockScan ca: '', cert: '', compliancePolicy: 'warn', \
-                  dockerAddress: 'tcp://localhost:2375', \
-                  gracePeriodDays: 0, ignoreImageBuildTime: false, \
-                  image: 'registry.eu-de.bluemix.net/invhariharan77/myapp:0.0.1', key: '', \
-                  logLevel: 'true', policy: 'warn', requirePackageUpdate: false, timeout: 60
-            }
-            echo "done"
-            sleep 300
-        }
+
+  stage('Publish') {
+    steps {
+      script {
+       twistlockPublish ca: '',
+          cert: '',
+          dockerAddress: 'unix:///var/run/docker.sock',
+          ignoreImageBuildTime: true,
+          image: 'registry.eu-de.bluemix.net/invhariharan77/myapp:0.0.1',
+          key: '',
+          logLevel: 'true',
+          timeout: 10
+      }
     }
-  
-    stage('Publish to Twistlock') {
-        steps {
-            echo "About to invoke twistlock publish"
-            echo "Image: $DOCKER_REGISTRY/$ORG/$APP_NAME:$VERSION"
-            sleep 3
-            script {
-                twistlockPublish ca: '', cert: '', \
-                    dockerAddress: 'tcp://localhost:2375', key: '', \
-                    image: 'registry.eu-de.bluemix.net/invhariharan77/myapp:0.0.1', \
-                    logLevel: 'true', timeout: 60
-            }
-            sleep 3001
-            echo "done"
-        }
-    }  
+  }
+
   }
   
   post {
