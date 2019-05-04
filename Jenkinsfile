@@ -41,14 +41,14 @@
       script {
         twistlockScan ca: '',
           cert: '',
-          compliancePolicy: 'warn',
+          compliancePolicy: 'low',
           dockerAddress: 'tcp://localhost:2375',
           gracePeriodDays: 0,
           ignoreImageBuildTime: true,
           image: 'registry.eu-de.bluemix.net/invhariharan77/myapp:0.0.1',
           key: '',
           logLevel: 'true',
-          policy: 'warn',
+          policy: 'low',
           requirePackageUpdate: false,
           timeout: 10,
           containerized: 'true'
