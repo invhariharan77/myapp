@@ -8,12 +8,9 @@
       ORG = 'invhariharan77'
       APP_NAME = 'myapp'
       CHARTMUSEUM_CREDS = credentials('jenkins-x-chartmuseum')
+      VERSION = 'latest'
     }
     
-    parameters {
-      string(name: 'VERSION', defaultValue: 'latest')
-    }
-  
     stages {
       stage ("Prepare") {
         steps {
@@ -41,8 +38,13 @@
             // sh "export VERSION=`cat VERSION` && skaffold build -f skaffold.yaml"
             // sh "docker tag registry.eu-de.bluemix.net/invhariharan77/myapp:\$(cat VERSION) myapp:latest"
           }
-          tmp_param =  sh (script: 'cat VERSION', returnStdout: true).trim()
-          env.VERSION = tmp_param
+        }
+      }
+    
+      stage ("Test") {
+        steps {
+          echo 'Functional tests!'
+          sleep 3 
         }
       }
       
@@ -72,7 +74,7 @@
               cert: '',
               dockerAddress: 'tcp://localhost:2375',
               ignoreImageBuildTime: true,
-              image: 'myapp:latest',
+              image: 'myapp:${env.VERSION}',
               key: '',
               logLevel: 'true',
               timeout: 10
