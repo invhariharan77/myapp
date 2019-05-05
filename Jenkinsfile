@@ -36,6 +36,10 @@
             sh "python -m unittest"
             sh "export VERSION=`cat VERSION`"
             sh "echo ${env.VERSION}"
+            script {
+              env.VERSION = readFile 'VERSION'
+            }
+            sh "echo ${env.VERSION}"
             sh "docker build --no-cache -t ${env.APP_NAME}:${env.VERSION} ."
             // sh "export VERSION=`cat VERSION` && skaffold build -f skaffold.yaml"
             // sh "docker tag registry.eu-de.bluemix.net/invhariharan77/myapp:\$(cat VERSION) myapp:latest"
