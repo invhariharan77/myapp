@@ -34,7 +34,9 @@
             sh "echo \$(jx-release-version) > VERSION"
             sh "jx step tag --version \$(cat VERSION)"
             sh "python -m unittest"
-            sh "docker build --no-cache -t myapp:latest ."
+            sh "export VERSION=`cat VERSION`"
+            sh "echo ${env.VERSION}"
+            sh "docker build --no-cache -t ${env.APP_NAME}:${env.VERSION} ."
             // sh "export VERSION=`cat VERSION` && skaffold build -f skaffold.yaml"
             // sh "docker tag registry.eu-de.bluemix.net/invhariharan77/myapp:\$(cat VERSION) myapp:latest"
           }
@@ -57,7 +59,7 @@
               dockerAddress: 'tcp://localhost:2375',
               gracePeriodDays: 0,
               ignoreImageBuildTime: true,
-              image: "myapp:${env.VERSION}",
+              image: "${env.APP_NAME}:${env.VERSION}",
               key: '',
               logLevel: 'true',
               policy: 'critical',
@@ -74,7 +76,7 @@
               cert: '',
               dockerAddress: 'tcp://localhost:2375',
               ignoreImageBuildTime: true,
-              image: 'myapp:latest',
+              image: "${env.APP_NAME}:${env.VERSION}",
               key: '',
               logLevel: 'true',
               timeout: 10
