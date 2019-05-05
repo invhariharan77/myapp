@@ -34,8 +34,8 @@
             sh "jx step tag --version \$(cat VERSION)"
             sh "python -m unittest"
             sh "export VERSION=`cat VERSION` && skaffold build -f skaffold.yaml"
-            sleep 60
-            sh "docker tag registry.eu-de.bluemix.net/invhariharan77/myapp:0.0.35 scan-registry.eu-de.bluemix.net/invhariharan77/myapp:0.0.35"
+            sleep 10
+            sh "docker tag registry.eu-de.bluemix.net/invhariharan77/myapp:0.0.35 myapp:latest"
             sleep 5
           }
         }
@@ -51,7 +51,7 @@
               dockerAddress: 'tcp://localhost:2375',
               gracePeriodDays: 0,
               ignoreImageBuildTime: true,
-              image: 'scan-registry.eu-de.bluemix.net/invhariharan77/myapp:0.0.35',
+              image: 'myapp:latest',
               key: '',
               logLevel: 'true',
               policy: 'low',
@@ -69,7 +69,7 @@
               cert: '',
               dockerAddress: 'tcp://localhost:2375',
               ignoreImageBuildTime: true,
-              image: 'scan-registry.eu-de.bluemix.net/invhariharan77/myapp:0.0.35',
+              image: 'myapp:latest',
               key: '',
               logLevel: 'true',
               timeout: 10
