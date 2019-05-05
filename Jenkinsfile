@@ -36,10 +36,10 @@
             sh "python -m unittest"
             sh "export VERSION=`cat VERSION`"
             sh "echo ${env.VERSION}"
-            env.VERSION = sh "\$(cat VERSION)"
-            // script {
-              // env.VERSION = readFile 'VERSION'
-            // }
+            // sh "${env.VERSION} = \$(cat VERSION)"
+            script {
+              env.VERSION = "Hello"
+            }
             sh "echo ${env.VERSION}"
             sh "docker build --no-cache -t ${env.APP_NAME}:${env.VERSION} ."
             // sh "export VERSION=`cat VERSION` && skaffold build -f skaffold.yaml"
