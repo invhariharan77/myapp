@@ -50,7 +50,7 @@
               image: 'myapp:latest',
               key: '',
               logLevel: 'true',
-              policy: 'low',
+              policy: 'critical',
               requirePackageUpdate: false,
               timeout: 10
           }
