@@ -34,16 +34,7 @@
             sh "echo \$(jx-release-version) > VERSION"
             sh "jx step tag --version \$(cat VERSION)"
             sh "python -m unittest"
-            sh "export VERSION=`cat VERSION`"
-            sh "echo ${env.VERSION}"
-            // sh "${env.VERSION} = \$(cat VERSION)"
-            script {
-              env.VERSION = "Hello"
-            }
-            sh "echo ${env.VERSION}"
             sh "docker build --no-cache -t ${env.APP_NAME}:${env.VERSION} ."
-            // sh "export VERSION=`cat VERSION` && skaffold build -f skaffold.yaml"
-            // sh "docker tag registry.eu-de.bluemix.net/invhariharan77/myapp:\$(cat VERSION) myapp:latest"
           }
         }
       }
