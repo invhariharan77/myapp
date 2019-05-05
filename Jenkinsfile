@@ -32,8 +32,9 @@
             sh "echo \$(jx-release-version) > VERSION"
             sh "jx step tag --version \$(cat VERSION)"
             sh "python -m unittest"
-            sh "export VERSION=`cat VERSION` && skaffold build -f skaffold.yaml"
-            sh "docker tag registry.eu-de.bluemix.net/invhariharan77/myapp:\$(cat VERSION) myapp:latest"
+            sh "docker build --no-cache -t myapp:latest ."
+            // sh "export VERSION=`cat VERSION` && skaffold build -f skaffold.yaml"
+            // sh "docker tag registry.eu-de.bluemix.net/invhariharan77/myapp:\$(cat VERSION) myapp:latest"
           }
         }
       }
@@ -75,6 +76,7 @@
       stage('Publish') {
         steps {
           container('python') {
+            sh "export VERSION=`cat VERSION` && skaffold build -f skaffold.yaml"
             sh "jx step post build --image $DOCKER_REGISTRY/$ORG/$APP_NAME:\$(cat VERSION)"
           }
         }
