@@ -1,4 +1,4 @@
-FROM python
+FROM jfloff/alpine-python
 COPY requirements.txt .
 ENV PORT 8080
 EXPOSE 8080
