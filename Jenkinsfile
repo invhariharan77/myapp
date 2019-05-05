@@ -7,7 +7,7 @@
       ORG = 'invhariharan77'
       APP_NAME = 'myapp'
       CHARTMUSEUM_CREDS = credentials('jenkins-x-chartmuseum')
-      VERSION = '0.0.29'
+      VERSION = '0.0.30'
     }
   
     stages {
@@ -34,6 +34,7 @@
             sh "jx step tag --version \$(cat VERSION)"
             sh "python -m unittest"
             sh "export VERSION=`cat VERSION` && skaffold build -f skaffold.yaml"
+            sh "docker tag registry.eu-de.bluemix.net/invhariharan77/myapp:0.0.30 scan-registry.eu-de.bluemix.net/invhariharan77/myapp:0.0.30"
           }
         }
       }
@@ -48,7 +49,7 @@
               dockerAddress: 'tcp://localhost:2375',
               gracePeriodDays: 0,
               ignoreImageBuildTime: true,
-              image: 'registry.eu-de.bluemix.net/invhariharan77/myapp:0.0.29',
+              image: 'scan-registry.eu-de.bluemix.net/invhariharan77/myapp:0.0.30',
               key: '',
               logLevel: 'true',
               policy: 'warn',
@@ -66,12 +67,12 @@
               cert: '',
               dockerAddress: 'tcp://localhost:2375',
               ignoreImageBuildTime: true,
-              image: 'registry.eu-de.bluemix.net/invhariharan77/myapp:0.0.29',
+              image: 'scan-registry.eu-de.bluemix.net/invhariharan77/myapp:0.0.30',
               key: '',
               logLevel: 'true',
               timeout: 10
           }
-          sleep 50000
+          sleep 5
         }
       }
          
