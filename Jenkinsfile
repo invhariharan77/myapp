@@ -57,7 +57,7 @@
               dockerAddress: 'tcp://localhost:2375',
               gracePeriodDays: 0,
               ignoreImageBuildTime: true,
-              image: 'myapp:${env.VERSION}',
+              image: 'myapp:${VERSION}',
               key: '',
               logLevel: 'true',
               policy: 'critical',
