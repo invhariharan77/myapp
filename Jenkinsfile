@@ -7,7 +7,6 @@
       ORG = 'invhariharan77'
       APP_NAME = 'myapp'
       CHARTMUSEUM_CREDS = credentials('jenkins-x-chartmuseum')
-      VERSION = '0.0.36'
     }
   
     stages {
@@ -34,16 +33,13 @@
             sh "jx step tag --version \$(cat VERSION)"
             sh "python -m unittest"
             sh "export VERSION=`cat VERSION` && skaffold build -f skaffold.yaml"
-            sleep 10
-            sh "docker tag registry.eu-de.bluemix.net/invhariharan77/myapp:0.0.36 myapp:latest"
-            sleep 5
+            sh "docker tag registry.eu-de.bluemix.net/invhariharan77/myapp:\$(cat VERSION) myapp:latest"
           }
         }
       }
       
       stage('Scan') {
         steps {
-          sleep 5
           script {
             twistlockScan ca: '',
               cert: '',
@@ -58,7 +54,6 @@
               requirePackageUpdate: false,
               timeout: 10
           }
-          sleep 5
         }
       }
 
@@ -74,7 +69,6 @@
               logLevel: 'true',
               timeout: 10
           }
-          sleep 50000
         }
       }
          
