@@ -36,13 +36,13 @@
             // so we can retrieve the version in later steps
             sh "echo \$(jx-release-version) > VERSION"
             sh "jx step tag --version \$(cat VERSION)"
-            tmp_param =  sh (script: 'cat VERSION', returnStdout: true).trim()
-            env.VERSION = tmp_param
             sh "python -m unittest"
             sh "docker build --no-cache -t myapp:latest ."
             // sh "export VERSION=`cat VERSION` && skaffold build -f skaffold.yaml"
             // sh "docker tag registry.eu-de.bluemix.net/invhariharan77/myapp:\$(cat VERSION) myapp:latest"
           }
+          tmp_param =  sh (script: 'cat VERSION', returnStdout: true).trim()
+          env.VERSION = tmp_param
         }
       }
       
