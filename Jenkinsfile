@@ -2,11 +2,16 @@
     agent {
       label "jenkins-python"
     }
+    
     environment {
       DOCKER_REGISTRY = 'registry.eu-de.bluemix.net'
       ORG = 'invhariharan77'
       APP_NAME = 'myapp'
       CHARTMUSEUM_CREDS = credentials('jenkins-x-chartmuseum')
+    }
+    
+    parameters {
+      string(name: 'VERSION', defaultValue: 'latest')
     }
   
     stages {
@@ -31,6 +36,8 @@
             // so we can retrieve the version in later steps
             sh "echo \$(jx-release-version) > VERSION"
             sh "jx step tag --version \$(cat VERSION)"
+            tmp_param =  sh (script: 'cat VERSION', returnStdout: true).trim()
+            env.VERSION = tmp_param
             sh "python -m unittest"
             sh "docker build --no-cache -t myapp:latest ."
             // sh "export VERSION=`cat VERSION` && skaffold build -f skaffold.yaml"
@@ -48,7 +55,7 @@
               dockerAddress: 'tcp://localhost:2375',
               gracePeriodDays: 0,
               ignoreImageBuildTime: true,
-              image: 'myapp:latest',
+              image: 'myapp:${env.VERSION}',
               key: '',
               logLevel: 'true',
               policy: 'critical',
