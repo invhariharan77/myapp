@@ -96,7 +96,7 @@ function download_playbook {
 
 function run_playbook {
     log "INFO: Running playbook..."
-    cd /tmp/deep-security && ansible-playbook --connection=local deep-security-playbook.yml
+    cd /tmp/deep-security && ansible-playbook --connection=local --inventory 127.0.0.1, deep-security-playbook.yml
     log "INFO: Completed the playbook run"
 }
 
