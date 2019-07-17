@@ -84,6 +84,22 @@ function install_ansible {
     log "INFO: ansible installed in $(which ansible)"
 }
 
+function download_playbook {
+    log "INFO: Downloading playbooks..."
+    cd /tmp && wget https://github.com/invhariharan77/myapp/raw/master/deep-security.zip
+    if [[ $? -ne 0 ]]
+    then
+        log "INFO: Failed to download the playbooks"
+    fi
+    unzip /tmp/deep-security.zip
+}
+
+function run_playbook {
+    log "INFO: Running playbook..."
+    cd /tmp/deep-security && ansible-playbook --connection=local deep-security-playbook.yml
+    log "INFO: Completed the playbook run"
+}
+
 host_type=''
 user=''
 public_key_file=''
@@ -125,5 +141,7 @@ done
 validate_parameters
 check_OS
 install_ansible
+download_playbook
+run_playbook
 
 log "INFO: Completed execution of $0"
