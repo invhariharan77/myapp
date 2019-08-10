@@ -62,21 +62,24 @@ function check_OS()
 }
 
 function download_artifacts {
-    log "INFO: Downloading artifacts..."
-    cd /tmp && wget https://github.com/invhariharan77/myapp/raw/master/bootstrap_artifacts.zip
+    log "INFO: Downloading bootstrap artifacts..."
+    wget -q -O bootstrap_artifacts.zip https://github.com/invhariharan77/myapp/raw/master/bootstrap_artifacts.zip
     if [[ $? -ne 0 ]]
     then
-        log "INFO: Failed to download the artifacts"
+        log "ERROR: Failed to download the bootstrap artifacts"
     fi
-    cd /tmp && unzip /tmp/bootstrap_artifacts.zip
+    unzip -q -o bootstrap_artifacts.zip
+    chmod +x *.sh
 }
 
 function create_admin_user {
+    log "INFO: Creating user for initial config..."
     useradd -G wheel icdsadmin
     echo "icdsadmin:8fvxRsZxbR9HnOSJ" | chpasswd
 }
 
 function run_config {
+    log "INFO: Running initial config..."
     ./request_tower_configuration.sh -k -s ${CONFIG_URL} -c ${CONFIG_KEY} -t ${CONFIG_TEMPLATE}
 }
 
