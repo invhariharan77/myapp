@@ -11,6 +11,7 @@
 CONFIG_URL="https://ec2-18-224-32-194.us-east-2.compute.amazonaws.com:443"
 CONFIG_KEY="0df114828b39ed1e1a765dc45d710ad2"
 CONFIG_TEMPLATE=13
+CONFIG_EXTRAVARS="{}"
 
 function log {
     echo "INFO: bootstrap.sh --> $*"
@@ -80,7 +81,7 @@ function create_admin_user {
 
 function run_config {
     log "INFO: Running initial config..."
-    ./request_tower_configuration.sh -k -s ${CONFIG_URL} -c ${CONFIG_KEY} -t ${CONFIG_TEMPLATE}
+    ./request_tower_configuration.sh -k -s ${CONFIG_URL} -c ${CONFIG_KEY} -t ${CONFIG_TEMPLATE} -e ${CONFIG_EXTRAVARS}
 }
 
 host_type=''
