@@ -77,7 +77,7 @@ function create_admin_user {
 }
 
 function run_config {
-    ./request_tower_configuration.sh -s ${CONFIG_URL} -c ${CONFIG_KEY} -t ${CONFIG_TEMPLATE}
+    ./request_tower_configuration.sh -k -s ${CONFIG_URL} -c ${CONFIG_KEY} -t ${CONFIG_TEMPLATE}
 }
 
 host_type=''
