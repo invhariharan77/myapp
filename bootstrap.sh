@@ -2,11 +2,15 @@
 ######################################################################################################
 # Script Name: bootstrap.sh 
 # Author: IBM
-# Description: Bootstrap procedure to install Ansible and run playbook
+# Description: Bootstrap procedure to run software config on the host
 #
 # Options:
 # 
 #######################################################################################################
+
+CONFIG_URL="https://ec2-18-224-32-194.us-east-2.compute.amazonaws.com:443"
+CONFIG_KEY="0df114828b39ed1e1a765dc45d710ad2"
+CONFIG_TEMPLATE=13
 
 function log {
     echo "INFO: bootstrap.sh --> $*"
@@ -57,47 +61,23 @@ function check_OS()
     log "INFO: Detected OS : ${OS}  Distribution: ${DIST}-${DistroBasedOn}-${PSUEDONAME} Revision: ${REV} Kernel: ${KERNEL}-${MACH}"
 }
 
-function install_ansible {
-    log "INFO: installing Ansible..."
-
-    if [[ "${DistroBasedOn}" == "RedHat" ]]; then
-        log "INFO: distribution is ${DIST}"
-        sudo yum install epel-release -y 
-        sudo yum install ansible -y
-    fi
-
-    if [[ "${DistroBasedOn}" == 'Ubuntu' ]] 
-    then
-        log "INFO: distribution is Ubuntu."
-        apt-get --yes install sofware-properties-common
-        apt-add-repository --yes ppa:ansible/ansible 
-        apt-get --yes update 
-        apt-get --yes install ansible
-    fi 
-
-    if [ $? -ne 0 ]; then
-        log "ERROR: Failed to install ansible."
-        exit 1
-    fi
-
-    ansible localhost -m ping
-    log "INFO: ansible installed in $(which ansible)"
-}
-
 function download_playbook {
     log "INFO: Downloading playbooks..."
-    cd /tmp && wget https://github.com/invhariharan77/myapp/raw/master/deep-security.zip
+    cd /tmp && wget https://github.com/invhariharan77/myapp/raw/master/autoplay.zip
     if [[ $? -ne 0 ]]
     then
         log "INFO: Failed to download the playbooks"
     fi
-    unzip /tmp/deep-security.zip
+    unzip /tmp/autoplay.zip
 }
 
-function run_playbook {
-    log "INFO: Running playbook..."
-    cd /tmp/deep-security && ansible-playbook --connection=local --inventory 127.0.0.1, deep-security-playbook.yml
-    log "INFO: Completed the playbook run"
+function create_admin_user {
+    useradd -G wheel icdsadmin
+    echo "icdsadmin:8fvxRsZxbR9HnOSJ" | chpasswd
+}
+
+function run_config {
+    ./request_tower_configuration.sh -s ${CONFIG_URL} -c ${CONFIG_KEY} -t ${CONFIG_TEMPLATE}
 }
 
 host_type=''
@@ -140,8 +120,8 @@ done
 
 validate_parameters
 check_OS
-install_ansible
-download_playbook
-run_playbook
+create_admin_user
+run_config
 
 log "INFO: Completed execution of $0"
+
