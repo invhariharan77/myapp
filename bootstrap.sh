@@ -61,14 +61,14 @@ function check_OS()
     log "INFO: Detected OS : ${OS}  Distribution: ${DIST}-${DistroBasedOn}-${PSUEDONAME} Revision: ${REV} Kernel: ${KERNEL}-${MACH}"
 }
 
-function download_playbook {
-    log "INFO: Downloading playbooks..."
-    cd /tmp && wget https://github.com/invhariharan77/myapp/raw/master/autoplay.zip
+function download_artifacts {
+    log "INFO: Downloading artifacts..."
+    cd /tmp && wget https://github.com/invhariharan77/myapp/raw/master/bootstrap_artifacts.zip
     if [[ $? -ne 0 ]]
     then
-        log "INFO: Failed to download the playbooks"
+        log "INFO: Failed to download the artifacts"
     fi
-    unzip /tmp/autoplay.zip
+    cd /tmp && unzip /tmp/bootstrap_artifacts.zip
 }
 
 function create_admin_user {
@@ -120,6 +120,7 @@ done
 
 validate_parameters
 check_OS
+download_artifacts
 create_admin_user
 run_config
 
