@@ -28,10 +28,10 @@ $AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
 [System.Net.ServicePointManager]::SecurityProtocol = $AllProtocols
 [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy
 
-$url = "https://raw.githubusercontent.com/invhariharan77/myapp/master/bootstrap_artifacts.zip"
-$output = "bootstrap_artifacts.zip"
-(New-Object System.Net.WebClient).DownloadFile($url, $output)
-Expand-Archive "bootstrap_artifacts.zip" -DestinationPath "." -Force
+# $url = "https://raw.githubusercontent.com/invhariharan77/myapp/master/bootstrap_artifacts.zip"
+# $output = "bootstrap_artifacts.zip"
+# (New-Object System.Net.WebClient).DownloadFile($url, $output)
+# Expand-Archive "bootstrap_artifacts.zip" -DestinationPath "." -Force
 
 $configURL = "https://ec2-18-224-32-194.us-east-2.compute.amazonaws.com:443"
 $configKey = "0df114828b39ed1e1a765dc45d710ad2"
@@ -40,6 +40,10 @@ $configTemplate = "13"
 # $extraVars = "{extra_vars: {}}"
 # .\request_tower_configuration.ps1 $configURL $configKey $configTemplate
 # Invoke-Expression ((New-Object System.Net.Webclient).DownloadString('https://raw.githubusercontent.com/invhariharan77/myapp/master/request_tower_configuration.ps1'))
+$data = @{
+    host_config_key=$configKey
+}
+Invoke-WebRequest -ContentType application/json -Method POST -Body (ConvertTo-Json $data) -Uri $configURL/api/v2/job_templates/$configTemplate/callback/
 
 # [Environment]::Exit(0)
 
