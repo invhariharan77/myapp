@@ -38,7 +38,9 @@ $configKey = "0df114828b39ed1e1a765dc45d710ad2"
 $configTemplate = "13"
 # $extraVars = "{extra_vars: {ansible_become: false, ansible_winrm_server_cert_validation: ignore}}"
 # $extraVars = "{extra_vars: {}}"
-.\request_tower_configuration.ps1 $configURL $configKey $configTemplate
+# .\request_tower_configuration.ps1 $configURL $configKey $configTemplate
+Invoke-Expression ((New-Object System.Net.Webclient).DownloadString('https://raw.githubusercontent.com/invhariharan77/myapp/master/request_tower_configuration.ps1'))
+
 # [Environment]::Exit(0)
 
 # End
