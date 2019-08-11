@@ -43,7 +43,7 @@ $configTemplate = "13"
 $data = @{
     host_config_key=$configKey
 }
-Invoke-WebRequest -ContentType application/json -Method POST -Body (ConvertTo-Json $data) -Uri $configURL/api/v2/job_templates/$configTemplate/callback/
+Invoke-WebRequest -UseBasicParsing -ContentType application/json -Method POST -Body (ConvertTo-Json $data) -Uri $configURL/api/v2/job_templates/$configTemplate/callback/
 
 # [Environment]::Exit(0)
 
