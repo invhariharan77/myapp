@@ -37,7 +37,8 @@ $configURL = "https://ec2-18-224-32-194.us-east-2.compute.amazonaws.com:443"
 $configKey = "0df114828b39ed1e1a765dc45d710ad2"
 $configTemplate = "13"
 # $extraVars = "{extra_vars: {ansible_become: false, ansible_winrm_server_cert_validation: ignore}}"
-$extraVars = "{extra_vars: {}}"
-Invoke-Expression (".\request_tower_configuration.ps1 $configURL $configKey $configTemplate $extraVars")
+# $extraVars = "{extra_vars: {}}"
+Invoke-Expression (".\request_tower_configuration.ps1 $configURL $configKey $configTemplate")
+[Environment]::Exit(0)
 
 # End
