@@ -2,9 +2,9 @@
 #
 
 # Create user for initial config
-$pw = ConvertTo-SecureString "8fvxRsZxbR9HnOSJ" -AsPlainText -Force
-New-LocalUser "icdsadmin" -Password $pw -FullName "ICDS Administrator" -Description "ICDS account for initial config."
-Add-LocalGroupMember -Group "Administrators" -Member "icdsadmin"
+# $pw = ConvertTo-SecureString "8fvxRsZxbR9HnOSJ" -AsPlainText -Force
+# New-LocalUser "icdsadmin" -Password $pw -FullName "ICDS Administrator" -Description "ICDS account for initial config."
+# Add-LocalGroupMember -Group "Administrators" -Member "icdsadmin"
 
 # $admin = [adsi]("WinNT://./mcmpadmin, user")
 # $admin.PSBase.Invoke("SetPassword", "myTempPassword123!")
