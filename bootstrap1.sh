@@ -83,7 +83,7 @@ function run_config {
     log "INFO: Running initial config..."
     if [[ ${jumpbox} ]]; then
       log "INFO: Setting config vars for jumpbox"
-      CONFIG_EXTRAVARS="{ansible_ssh_common_args: '-o ProxyCommand=\"ssh -W %h:%p -q icdsadmin@${jumpbox}\"'}"
+      CONFIG_EXTRAVARS="{ansible_ssh_common_args: '-o ProxyCommand=\"ssh -W %h:%p -q icdsadmin@${jumpbox}\"', ansible_become: true}"
     fi
     ./request_tower_configuration.sh -k -s ${CONFIG_URL} -c ${CONFIG_KEY} -t ${CONFIG_TEMPLATE} -e ${CONFIG_EXTRAVARS}
 }
