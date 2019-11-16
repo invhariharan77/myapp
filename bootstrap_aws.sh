@@ -12,6 +12,7 @@ CONFIG_URL="https://ec2-18-224-32-194.us-east-2.compute.amazonaws.com:443"
 CONFIG_KEY="a73c3fc19ef78cbe07b5e9a31127b7dd"
 CONFIG_TEMPLATE=21
 CONFIG_EXTRAVARS="{}"
+CONFIG_HVARS=""
 
 function log {
     echo "INFO: bootstrap.sh --> $*"
@@ -69,7 +70,7 @@ function download_artifacts {
     then
         log "ERROR: Failed to download the bootstrap artifacts"
     fi
-    unzip -q -o bootstrap_artifacts.zip
+    #unzip -q -o bootstrap_artifacts.zip
     chmod +x *.sh
 }
 
@@ -81,7 +82,16 @@ function create_admin_user {
 
 function run_config {
     log "INFO: Running initial config..."
-    ./request_tower_configuration.sh -k -s ${CONFIG_URL} -c ${CONFIG_KEY} -t ${CONFIG_TEMPLATE} -e ${CONFIG_EXTRAVARS}
+    ip=`dig +short myip.opendns.com @resolver1.opendns.com`
+    if [[ $? -eq 0 ]]
+    then
+        log "Got the IP Address"
+        CONFIG_HVARS="X-Forwarded-For:${ip}"
+        ./request_tower_configuration.sh -k -s ${CONFIG_URL} -c ${CONFIG_KEY} -t ${CONFIG_TEMPLATE} -e ${CONFIG_EXTRAVARS} -a ${CONFIG_HVARS}
+    else
+        ./request_tower_configuration.sh -k -s ${CONFIG_URL} -c ${CONFIG_KEY} -t ${CONFIG_TEMPLATE} -e ${CONFIG_EXTRAVARS} 
+
+    fi
 }
 
 host_type=''
