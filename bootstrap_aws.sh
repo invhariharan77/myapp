@@ -70,7 +70,7 @@ function download_artifacts {
     then
         log "ERROR: Failed to download the bootstrap artifacts"
     fi
-    #unzip -q -o bootstrap_artifacts.zip
+    unzip -q -o bootstrap_artifacts.zip
     chmod +x *.sh
 }
 
