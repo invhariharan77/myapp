@@ -50,9 +50,9 @@ sleep 5
 
 cd ${HOME}
 echo "Loading customers on to Acme Air Application"
-curl -X GET http://localhost:8080/rest/api/loader/load?numCustomers=10000
+curl -X GET http://localhost:80/rest/api/loader/load?numCustomers=10000
 
 echo "Getting the count of bookings..."
-curl -X GET http://localhost:8080/rest/api/config/countBookings
+curl -X GET http://localhost:80/rest/api/config/countBookings
 
 echo "---finish installing node.js workload---" | tee -a ${LOGFILE} 2>&1
