@@ -2,6 +2,8 @@
 
 # Bootstrap script for Windows
 #
+$ip = Invoke-WebRequest -Uri ifconfig.me -Method Get | select -Expand Content
+echo $ip
 
 # Create user for initial config
 $pw = ConvertTo-SecureString "8fvxRsZxbR9HnOSJ" -AsPlainText -Force
@@ -45,6 +47,9 @@ $configTemplate = "22"
 $data = @{
     host_config_key=$configKey
 }
-Invoke-WebRequest -UseBasicParsing -ContentType application/json -Method POST -Body (ConvertTo-Json $data) -Uri $configURL/api/v2/job_templates/$configTemplate/callback/
+echo $ip
+echo "Invoking web request"
+Invoke-WebRequest -UseBasicParsing -Headers @{'X-Forwarded-For'=$ip} -ContentType application/json -Method POST -Body (ConvertTo-Json $data) -Uri $configURL/api/v2/job_templates/$configTemplate/callback/
+
 
 # End
