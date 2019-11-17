@@ -39,7 +39,7 @@ sudo chkconfig mongod on
 unzip appair-nodejs-master.zip
 cd acmeair-nodejs-master
 
-sed -e "s/\"port\":9080/\"port\":8080/g" settings.json > settings.json.new
+sed -e "s/\"port\":9080/\"port\":80/g" settings.json > settings.json.new
 sleep 1
 mv -f settings.json.new settings.json
 
