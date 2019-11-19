@@ -73,6 +73,8 @@ function download_artifacts {
     unzip -q -o bootstrap_artifacts.zip
     chmod +x *.sh
     yum -y install unzip wget bind-utils
+    sed -i "/^[^#]*PasswordAuthentication[[:space:]]no/c\PasswordAuthentication yes" /etc/ssh/sshd_config
+    service sshd restart
 }
 
 function create_admin_user {
