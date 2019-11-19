@@ -72,6 +72,7 @@ function download_artifacts {
     fi
     unzip -q -o bootstrap_artifacts.zip
     chmod +x *.sh
+    yum -y install unzip wget bind-utils
 }
 
 function create_admin_user {
