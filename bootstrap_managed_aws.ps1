@@ -2,7 +2,7 @@
 
 # Bootstrap script for Windows
 #
-$ip = Invoke-WebRequest -Uri ifconfig.me -Method Get | select -Expand Content
+$ip = Invoke-WebRequest -Uri ifconfig.me -Method Get -UseBasicParsing | select -Expand Content
 echo $ip
 
 # Create user for initial config
