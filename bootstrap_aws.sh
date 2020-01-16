@@ -81,6 +81,11 @@ function create_admin_user {
     log "INFO: Creating user for initial config..."
     useradd -G wheel icdsadmin
     echo "icdsadmin:8fvxRsZxbR9HnOSJ" | chpasswd
+        
+    log "INFO: Adding to the sudoers"
+    cp /etc/sudoers /home/icdsadmin
+    echo "icdsadmin ALL=(ALL:ALL) ALL" >> /etc/sudoers
+    log "INFO: Added to the sudoers"
 }
 
 function run_config {
