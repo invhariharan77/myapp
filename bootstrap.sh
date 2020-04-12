@@ -8,21 +8,41 @@
 # 
 #######################################################################################################
 
-CONFIG_URL="https://ec2-18-224-32-194.us-east-2.compute.amazonaws.com:443"
-CONFIG_KEY="0df114828b39ed1e1a765dc45d710ad2"
-CONFIG_TEMPLATE=13
-CONFIG_EXTRAVARS="{}"
+# Default values
+ANSIBLE_TOWER_URL="https://ec2-18-224-32-194.us-east-2.compute.amazonaws.com:443"
+ANSIBLE_TOWER_JOB_CONFIGKEY="0df114828b39ed1e1a765dc45d710ad2"
+ANSIBLE_TOWER_JOB_TEMPLATE=13
+ANSIBLE_TOWER_JOB_EXTRAVARS="{}"
 
+JQ_DOWNLOAD_URL="https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64"
+BOOTSTRAP_SUPPORT_DOWNLOAD_URL="https://github.com/invhariharan77/myapp/raw/master/bootstrap_artifacts.zip"
+
+# log to output
 function log {
     echo "INFO: bootstrap.sh --> $*"
 }
 
-function usage {
-    log "INFO: Usage: None"
+# Handle fatal failures
+fatal() {
+  if [ -n "${2}" ]; then
+    echo -e "ERROR: ${2}"
+  fi
+  exit ${1}
 }
 
-function validate_parameters {
-    log "INFO: Validation of parameters..."
+function usage {
+cat << EOF
+Usage: $0 <options>
+
+Bootstrap the server by invoke Ansible playbook
+
+OPTIONS:
+   -h      Show this message
+   -s      Tower server
+   -c      Host config key
+   -t      Job template ID
+   -e      Extra variables
+EOF
 }
 
 function check_OS()
@@ -59,69 +79,65 @@ function check_OS()
     readonly KERNEL
     readonly MACH
 
-    log "INFO: Detected OS : ${OS}  Distribution: ${DIST}-${DistroBasedOn}-${PSUEDONAME} Revision: ${REV} Kernel: ${KERNEL}-${MACH}"
+    log "Detected OS : ${OS}  Distribution: ${DIST}-${DistroBasedOn}-${PSUEDONAME} Revision: ${REV} Kernel: ${KERNEL}-${MACH}"
 }
 
 function download_artifacts {
-    log "INFO: Downloading bootstrap artifacts..."
-    wget -q -O bootstrap_artifacts.zip https://github.com/invhariharan77/myapp/raw/master/bootstrap_artifacts.zip
-    if [[ $? -ne 0 ]]
-    then
-        log "ERROR: Failed to download the bootstrap artifacts"
+    log "Downloading bootstrap additional artifacts..."
+    wget -q -O bootstrap_artifacts.zip ${BOOTSTRAP_SUPPORT_DOWNLOAD_URL}
+    if [[ $? -ne 0 ]]; then
+        fatal "ERROR: Failed to download the bootstrap artifacts"
     fi
     unzip -q -o bootstrap_artifacts.zip
     chmod +x *.sh
 
-    wget -q -O /usr/local/bin/jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
+    wget -q -O /usr/local/bin/jq ${JQ_DOWNLOAD_URL}
     chmod +x /usr/local/bin/jq
 }
 
 function create_admin_user {
-    log "INFO: Creating user for initial config..."
-    useradd -G wheel icdsadmin
-    echo "icdsadmin:8fvxRsZxbR9HnOSJ" | chpasswd
-}
-
-function run_config {
-    log "INFO: Running initial config..."
-    ./request_tower_configuration.sh -k -s ${CONFIG_URL} -c ${CONFIG_KEY} -t ${CONFIG_TEMPLATE} -e ${CONFIG_EXTRAVARS}
-    install_status=$?
-    if [[ ${install_status} -ne 0 ]]; then
-      log "INFO:bootstrap procedure failed with exit code ${install_status}"
-      log "ERROR: Exiting..."
-      exit 2
+    log "Creating user for initial config..."
+    user_exists=`id -u icdsadmin 2> /dev/null`
+    if [[ $? -ne 0 ]]; then
+        useradd -G wheel icdsadmin
+        echo "icdsadmin:8fvxRsZxbR9HnOSJ" | chpasswd
+    else
+        log "User icdsadmin already exists. Skipping."
     fi
 }
 
-host_type=''
-user=''
-public_key_file=''
-private_key_file=''
-playbooks_file=''
+function run_ansible_play {
+    log "Invoke ansible playbook..."
+    ./request_tower_configuration.sh -k \
+        -s ${ANSIBLE_TOWER_URL} \
+        -c ${ANSIBLE_TOWER_JOB_CONFIGKEY} \
+        -t ${ANSIBLE_TOWER_JOB_TEMPLATE} \
+        -e ${ANSIBLE_TOWER_JOB_EXTRAVARS}
+    install_status=$?
+    if [[ ${install_status} -ne 0 ]]; then
+      log "Invoke ansible playbook procedure failed with exit code ${install_status}"
+      fatal "failed to run ansible play"
+    fi
+}
 
-log "INFO: $# options and arguments were passed."
-
-while getopts u:t:k:p:f: opt; do
-    case $opt in
-        u)
-            user=${OPTARG}
-            log "user --> $user" 
+while getopts hs:c:t:e: OPTION; 
+do
+    case ${OPTION} in
+        s)
+            ANSIBLE_TOWER_SRV_URL=${OPTARG}
             ;;
-        t) 
-            host_type=${OPTARG}
-            log "host_type --> $host_type"
+        c) 
+            ANSIBLE_TOWER_JOB_CONFIGKEY=${OPTARG}
             ;;
-        k)
-            public_key_file=${OPTARG}
-            log "public_key_file --> $public_key_file"
+        t)
+            ANSIBLE_TOWER_JOB_TEMPLATE=${OPTARG}
             ;;
-        p) 
-            private_key_file=${OPTARG}
-            log "private_key_file --> $private_key_file"
+        e) 
+            ANSIBLE_TOWER_JOB_EXTRAVARS=${OPTARG}
             ;;
-        f)
-            playbooks_file=${OPTARG}
-            log "playbooks_file --> $playbooks_file"
+        h)
+            usage
+            exit 1
             ;;
         \?) #invalid option
             log "${OPTARG} is not a valid option"
@@ -131,12 +147,16 @@ while getopts u:t:k:p:f: opt; do
     esac 
 done
 
-validate_parameters
+log "ANSIBLE_TOWER_SRV_URL = ${ANSIBLE_TOWER_SRV_URL}"
+log "ANSIBLE_TOWER_JOB_CONFIGKEY = ${ANSIBLE_TOWER_JOB_CONFIGKEY}"
+log "ANSIBLE_TOWER_JOB_TEMPLATE = ${ANSIBLE_TOWER_JOB_TEMPLATE}"
+log "ANSIBLE_TOWER_JOB_EXTRAVARS = ${ANSIBLE_TOWER_JOB_EXTRAVARS}"
+
 check_OS
 download_artifacts
 create_admin_user
-run_config
+run_ansible_play
 
-log "INFO: Completed execution of $0"
+log "Successfully completed execution of $0"
 
 # End
