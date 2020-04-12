@@ -85,6 +85,12 @@ function create_admin_user {
 function run_config {
     log "INFO: Running initial config..."
     ./request_tower_configuration.sh -k -s ${CONFIG_URL} -c ${CONFIG_KEY} -t ${CONFIG_TEMPLATE} -e ${CONFIG_EXTRAVARS}
+    install_status=$?
+    if [[ ${install_status} -ne 0 ]]; then
+      log "INFO:bootstrap procedure failed with exit code ${install_status}"
+      log "ERROR: Exiting..."
+      exit 2
+    fi
 }
 
 host_type=''
@@ -133,3 +139,4 @@ run_config
 
 log "INFO: Completed execution of $0"
 
+# End
