@@ -71,6 +71,9 @@ function download_artifacts {
     fi
     unzip -q -o bootstrap_artifacts.zip
     chmod +x *.sh
+
+    wget -q -O /usr/local/bin/jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
+    chmod +x /usr/local/bin/jq
 }
 
 function create_admin_user {
