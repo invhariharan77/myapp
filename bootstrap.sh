@@ -108,16 +108,27 @@ function create_admin_user {
 
 function run_ansible_play {
     log "Invoke ansible playbook..."
-    ./request_tower_configuration.sh -k \
-        -s ${ANSIBLE_TOWER_URL} \
-        -c ${ANSIBLE_TOWER_JOB_CONFIGKEY} \
-        -t ${ANSIBLE_TOWER_JOB_TEMPLATE} \
-        -e ${ANSIBLE_TOWER_JOB_EXTRAVARS}
-    install_status=$?
-    if [[ ${install_status} -ne 0 ]]; then
-      log "Invoke ansible playbook procedure failed with exit code ${install_status}"
-      fatal "failed to run ansible play"
-    fi
+    retry_count=3
+
+    while [[ ${retry_count} -gt 0 ]]
+    do
+      ./request_tower_configuration.sh -k \
+          -s ${ANSIBLE_TOWER_URL} \
+          -c ${ANSIBLE_TOWER_JOB_CONFIGKEY} \
+          -t ${ANSIBLE_TOWER_JOB_TEMPLATE} \
+          -e ${ANSIBLE_TOWER_JOB_EXTRAVARS}
+      install_status=$?
+      if [[ ${install_status} -eq 0 ]]; then
+        break
+      elif [[ ${install_status} -eq 909 ]]; then
+        echo "Sync inventory failed. trying again after 120 seconds..."
+        sleep 120
+        retry_count=$((retry_count - 1))
+      else
+        log "Invoke ansible playbook procedure failed with exit code ${install_status}"
+        fatal "failed to run ansible play"
+      fi
+    done
 }
 
 while getopts hs:c:t:e: OPTION; 
@@ -147,7 +158,7 @@ do
     esac 
 done
 
-log "ANSIBLE_TOWER_SRV_URL = ${ANSIBLE_TOWER_SRV_URL}"
+log "ANSIBLE_TOWER_URL = ${ANSIBLE_TOWER_URL}"
 log "ANSIBLE_TOWER_JOB_CONFIGKEY = ${ANSIBLE_TOWER_JOB_CONFIGKEY}"
 log "ANSIBLE_TOWER_JOB_TEMPLATE = ${ANSIBLE_TOWER_JOB_TEMPLATE}"
 log "ANSIBLE_TOWER_JOB_EXTRAVARS = ${ANSIBLE_TOWER_JOB_EXTRAVARS}"
