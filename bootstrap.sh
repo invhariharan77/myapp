@@ -86,7 +86,7 @@ function download_artifacts {
     log "Downloading bootstrap additional artifacts..."
     wget -q -O bootstrap_artifacts.zip ${BOOTSTRAP_SUPPORT_DOWNLOAD_URL}
     if [[ $? -ne 0 ]]; then
-        fatal "ERROR: Failed to download the bootstrap artifacts"
+        fatal 1 "ERROR: Failed to download the bootstrap artifacts"
     fi
     unzip -q -o bootstrap_artifacts.zip
     chmod +x *.sh
@@ -126,7 +126,7 @@ function run_ansible_play {
         retry_count=$((retry_count - 1))
       else
         log "Invoke ansible playbook procedure failed with exit code ${install_status}"
-        fatal "failed to run ansible play"
+        fatal 2 "failed to run ansible play"
       fi
     done
 }
